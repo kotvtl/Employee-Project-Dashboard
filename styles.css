@@ -1,0 +1,109 @@
+:root{
+    --bg: #f1f5f9;
+    --sidebar-bg: #1e293b;
+    --sidebar-text: #cbd5el;
+    --sidebar-active: #3b82f6;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --text-secondary: #64748b;
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --amber: #f59e0b;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --radius: 8px;
+    --transition: 0.2s ease;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    line-height: 1.5;
+}
+.sidebar{
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    transition: width var(--transition), transform var(--transition);
+    flex-shrink: 0;
+    z-index: 100;
+    position: relative;
+}
+.sidebar.cooapsed{
+    width: 0;
+    overflow: hidden;
+}
+.sidebar-header{
+    padding: 20px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #334155;
+    min-width: 260px;
+}
+.sidebar-header h2{
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    white-space: nowrap;
+}
+.toggle-btn {
+    background: none;
+    border: none;
+    color: #cbd5e1;
+    cursor: pointer;
+    font-size: 1.4rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: var(--transition);
+}
+.toggle-btn:hover {
+    color: #ffffff;
+    background: #334155;
+}
+.sidebar-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+    min-width: 260px;
+    overflow-y: auto;
+}
+.sidebar label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.sidebar select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #475569;
+    background: #334155;
+    color: #f1f5f9;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.sidebar select:hover {
+    border-color: #64748b;
+}
+.sidebar select:focus {
+    outline: none;
+    border-color: var(--sidebar-active);
+    box-shadow: 0 0 0 3px rgba(59, 130, 249, 0.2);
+}
