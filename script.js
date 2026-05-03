@@ -1,5 +1,5 @@
-(function() {    
-    const STORAGE_KEY = 'monthlyData';
+    (function() {
+       const STORAGE_KEY = 'monthlyData';
 
     function getMonthlyData() {
         try {
@@ -68,18 +68,21 @@
     function calculateEffectiveCapacity(assignedCapacity, fit, vacationCoefficient) {
         return assignedCapacity * fit * vacationCoefficient;
     }
-const state = {
+
+       const state = {
         currentYear: new Date().getFullYear(),
         currentMonth: new Date().getMonth(),
         activeTab: 'projects',
         sortColumn: null,
         sortDirection: 'asc',
-        filters: {}, // { column: value }
+        filters: {}, 
         sidebarCollapsed: false,
     };
+
     if (state.currentYear < 2025) state.currentYear = 2025;
     if (state.currentYear > 2027) state.currentYear = 2027;
-function getEmployeeAssignments(employeeId, periodData) {
+
+    function getEmployeeAssignments(employeeId, periodData) {
         const assignments = [];
         for (const project of periodData.projects) {
             const empAssign = (project.assignedEmployees || []).find(a => a.employeeId === employeeId);
@@ -153,7 +156,8 @@ function getEmployeeAssignments(employeeId, periodData) {
                 assignedEmployeeIds.add(a.employeeId);
             }
         }
-let totalBenchCost = 0;
+
+        let totalBenchCost = 0;
         for (const emp of periodData.employees) {
             if (!assignedEmployeeIds.has(emp.id)) {
                 totalBenchCost += emp.salary * 0.5;
@@ -209,7 +213,8 @@ let totalBenchCost = 0;
             vacationCoefficient: vacCoef,
         };
     }
-function $(sel, ctx = document) { return ctx.querySelector(sel); }
+
+    function $(sel, ctx = document) { return ctx.querySelector(sel); }
     function $$(sel, ctx = document) { return Array.from(ctx.querySelectorAll(sel)); }
 
     function formatCurrency(num) {
@@ -245,7 +250,9 @@ function $(sel, ctx = document) { return ctx.querySelector(sel); }
         $('#filterPopupContainer').innerHTML = '';
         hideOverlay();
     }
-function getPeriodDataSafe() {
+
+  
+    function getPeriodDataSafe() {
         const data = getMonthlyData();
         const key = getPeriodKey(state.currentYear, state.currentMonth);
         if (!data[key]) {
@@ -314,7 +321,7 @@ function getPeriodDataSafe() {
 
     function getFilteredAndSortedItems(items, sortableColumns) {
         let result = [...items];
-        // Apply filters
+       
         for (const [col, val] of Object.entries(state.filters)) {
             if (!val) continue;
             result = result.filter(item => {
@@ -322,7 +329,7 @@ function getPeriodDataSafe() {
                 return itemVal.includes(val.toLowerCase());
             });
         }
-        // Apply sort
+       
         if (state.sortColumn && sortableColumns.includes(state.sortColumn)) {
             result.sort((a, b) => {
                 let va = getItemColumnValue(a, state.sortColumn);
@@ -425,7 +432,6 @@ function getPeriodDataSafe() {
             }
         }
 
-        // Total row
         html += `<tr class="total-row">
               <td colspan="5" style="text-align:right;">Total Estimated Income:</td>
               <td class="${financials.totalEstimatedIncome >= 0 ? 'income-positive' : 'income-negative'}">${formatCurrency(financials.totalEstimatedIncome)}</td>
@@ -571,45 +577,49 @@ function getPeriodDataSafe() {
             });
         });
     }
-function openFilterPopup(column, anchorEl) {
-        closeAllPopups();
-        const rect = anchorEl.getBoundingClientRect();
-        const popup = createElement('div', {
-            className: 'action-menu',
-            style: `position:fixed;z-index:800;top:${rect.bottom + 4}px;left:${Math.min(rect.left, window.innerWidth - 220)}px;min-width:200px;padding:12px;`,
-        });
-        const input = createElement('input', {
-            type: 'text',
-            placeholder: `Filter ${column}...`,
-            value: state.filters[column] || '',
-            style: 'width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.85rem;',
-        });
-        const btnRow = createElement('div', { style: 'display:flex;gap:8px;margin-top:8px;' });
-        const applyBtn = createElement('button', {
-            className: 'btn-sm primary',
-            textContent: 'Apply',
-            onClick: () => {
-                state.filters[column] = input.value.trim() || '';
-                if (!state.filters[column]) delete state.filters[column];
-                closeAllPopups();
-                renderAll();
-            }
-        });
-        const cancelBtn = createElement('button', {
-            className: 'btn-sm',
-            textContent: 'Cancel',
-            onClick: () => { closeAllPopups(); renderAll(); }
-        });
-        btnRow.appendChild(applyBtn);
-        btnRow.appendChild(cancelBtn);
-        popup.appendChild(input);
-        popup.appendChild(btnRow);
-        document.body.appendChild(popup);
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { applyBtn.click(); }
-            if (e.key === 'Escape') { cancelBtn.click(); }
-        });
-        input.focus();
+
+       function openFilterPopup(column, anchorEl) {
+    closeAllPopups();
+    const rect = anchorEl.getBoundingClientRect();
+    const popup = createElement('div', {
+        className: 'action-menu',
+        style: `position:fixed;z-index:800;top:${rect.bottom + 4}px;left:${Math.min(rect.left, window.innerWidth - 220)}px;min-width:200px;padding:12px;`,
+    });
+    const input = createElement('input', {
+        type: 'text',
+        placeholder: `Filter ${column}...`,
+        value: state.filters[column] || '',
+        style: 'width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.85rem;',
+    });
+    const btnRow = createElement('div', { style: 'display:flex;gap:8px;margin-top:8px;' });
+    const applyBtn = createElement('button', {
+        className: 'btn-sm primary',
+        textContent: 'Apply',
+        onClick: () => {
+            state.filters[column] = input.value.trim() || '';
+            if (!state.filters[column]) delete state.filters[column];
+            closeAllPopups();
+            renderAll();
+        }
+    });
+    const cancelBtn = createElement('button', {
+        className: 'btn-sm',
+        textContent: 'Cancel',
+        onClick: () => { closeAllPopups(); renderAll(); }
+    });
+    btnRow.appendChild(applyBtn);
+    btnRow.appendChild(cancelBtn);
+    popup.appendChild(input);
+    popup.appendChild(btnRow);
+    
+       $('#filterPopupContainer').appendChild(popup);
+    showOverlay();
+    
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { applyBtn.click(); }
+        if (e.key === 'Escape') { cancelBtn.click(); }
+    });
+    input.focus();
         setTimeout(() => {
             const handler = (e) => {
                 if (!popup.contains(e.target) && e.target !== anchorEl) {
@@ -622,32 +632,34 @@ function openFilterPopup(column, anchorEl) {
     }
 
     function openPositionFilterPopup(anchorEl) {
-        closeAllPopups();
-        const rect = anchorEl.getBoundingClientRect();
-        const popup = createElement('div', {
-            className: 'action-menu',
-            style: `position:fixed;z-index:800;top:${rect.bottom + 4}px;left:${Math.min(rect.left, window.innerWidth - 220)}px;min-width:180px;padding:8px;`,
+    closeAllPopups();
+    const rect = anchorEl.getBoundingClientRect();
+    const popup = createElement('div', {
+        className: 'action-menu',
+        style: `position:fixed;z-index:800;top:${rect.bottom + 4}px;left:${Math.min(rect.left, window.innerWidth - 220)}px;min-width:180px;padding:8px;`,
+    });
+    const positions = ['Junior', 'Middle', 'Senior', 'Lead', 'Architect', 'BO'];
+    for (const pos of positions) {
+        const btn = createElement('button', {
+            textContent: pos,
+            onClick: () => {
+                state.filters['Position'] = pos;
+                closeAllPopups();
+                renderAll();
+            }
         });
-        const positions = ['Junior', 'Middle', 'Senior', 'Lead', 'Architect', 'BO'];
-        for (const pos of positions) {
-            const btn = createElement('button', {
-                textContent: pos,
-                onClick: () => {
-                    state.filters['Position'] = pos;
-                    closeAllPopups();
-                    renderAll();
-                }
-            });
-            if (state.filters['Position'] === pos) btn.style.background = '#eff6ff';
-            popup.appendChild(btn);
-        }
-        const clearBtn = createElement('button', {
-            textContent: 'Clear Filter',
-            className: 'danger-action',
-            onClick: () => { delete state.filters['Position']; closeAllPopups(); renderAll(); }
-        });
-        popup.appendChild(clearBtn);
-        document.body.appendChild(popup);
+        if (state.filters['Position'] === pos) btn.style.background = '#eff6ff';
+        popup.appendChild(btn);
+    }
+    const clearBtn = createElement('button', {
+        textContent: 'Clear Filter',
+        className: 'danger-action',
+        onClick: () => { delete state.filters['Position']; closeAllPopups(); renderAll(); }
+    });
+    popup.appendChild(clearBtn);
+    
+       $('#filterPopupContainer').appendChild(popup);
+    showOverlay();
         setTimeout(() => {
             const handler = (e) => {
                 if (!popup.contains(e.target) && e.target !== anchorEl) {
@@ -658,7 +670,8 @@ function openFilterPopup(column, anchorEl) {
             document.addEventListener('click', handler);
         }, 100);
     }
-function startPositionEdit(span) {
+
+       function startPositionEdit(span) {
         const empId = span.dataset.empId;
         const periodData = getPeriodDataSafe();
         const emp = periodData.employees.find(e => e.id === empId);
@@ -705,7 +718,8 @@ function startPositionEdit(span) {
             if (e.key === 'Escape') { renderAll(); }
         });
     }
-function openSlidePanel(title, bodyHTML, onSubmit) {
+
+       function openSlidePanel(title, bodyHTML, onSubmit) {
         const panel = $('#slidePanel');
         $('#slidePanelTitle').textContent = title;
         $('#slidePanelBody').innerHTML = bodyHTML;
@@ -973,7 +987,8 @@ function openSlidePanel(title, bodyHTML, onSubmit) {
         closeSlidePanel();
         renderAll();
     }
- function showProjectEmployeesPopup(projectId) {
+
+        function showProjectEmployeesPopup(projectId) {
         closeAllPopups();
         const periodData = getPeriodDataSafe();
         const project = periodData.projects.find(p => p.id === projectId);
@@ -1221,7 +1236,7 @@ function openSlidePanel(title, bodyHTML, onSubmit) {
                 const vc = e ? calculateVacationCoefficient(e, state.currentYear, state.currentMonth) : 1;
                 return s + calculateEffectiveCapacity(a.capacity, a.fit, vc);
             }, 0);
-            return true; // Allow over-capacity with warning
+            return true;
         });
 
         let projectOptions = availableProjects.map(p => {
@@ -1605,7 +1620,8 @@ function openSlidePanel(title, bodyHTML, onSubmit) {
             document.addEventListener('click', handler);
         }, 100);
     }
-function deleteProject(projectId) {
+
+       function deleteProject(projectId) {
         closeAllPopups();
         const periodData = getPeriodDataSafe();
         const project = periodData.projects.find(p => p.id === projectId);
@@ -1673,66 +1689,93 @@ function deleteProject(projectId) {
             renderAll();
         });
     }
- function openSeedDataPopup() {
-        closeAllPopups();
-        const data = getMonthlyData();
-        const currentKey = getPeriodKey(state.currentYear, state.currentMonth);
-        const availableMonths = Object.entries(data).filter(([key]) => key !== currentKey && data[key] && (data[key].employees?.length > 0 || data[key].projects?.length > 0));
 
-        const popup = createElement('div', {
-            className: 'modal',
-            style: 'position:fixed;z-index:700;top:50%;left:50%;transform:translate(-50%,-50%);min-width:450px;max-width:500px;max-height:70vh;overflow-y:auto;',
-        });
-        let listHTML = '';
-        if (availableMonths.length === 0) {
-            listHTML = '<p style="text-align:center;padding:20px;color:#94a3b8;">No data available in other months</p>';
-        } else {
-            for (const [key, monthData] of availableMonths) {
-                const [y, m] = key.split('-').map(Number);
-                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                const fin = calculateAllProjectFinancials(monthData, y, m);
-                const incomeClass = fin.totalEstimatedIncome >= 0 ? 'income-positive' : 'income-negative';
-                listHTML += `
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid #e2e8f0;">
-                  <div>
-                    <strong>${months[m]} ${y}</strong><br>
-                    <small>Projects: ${monthData.projects?.length || 0} | Employees: ${monthData.employees?.length || 0}</small><br>
-                    <small class="${incomeClass}">Income: ${formatCurrency(fin.totalEstimatedIncome)}</small>
-                  </div>
-                  <button class="btn-sm primary seed-month-btn" data-key="${key}">Seed</button>
-                </div>`;
-            }
+       function openSeedDataPopup() {
+    closeAllPopups();
+    const data = getMonthlyData();
+    const currentKey = getPeriodKey(state.currentYear, state.currentMonth);
+    const availableMonths = Object.entries(data).filter(([key]) => 
+        key !== currentKey && 
+        data[key] && 
+        (data[key].employees?.length > 0 || data[key].projects?.length > 0)
+    );
+
+    const popup = createElement('div', {
+        className: 'modal',
+        style: 'position:fixed;z-index:700;top:50%;left:50%;transform:translate(-50%,-50%);min-width:450px;max-width:500px;max-height:70vh;overflow-y:auto;',
+    });
+    
+    let listHTML = '';
+    if (availableMonths.length === 0) {
+        listHTML = '<p style="text-align:center;padding:20px;color:#94a3b8;">No data available in other months</p>';
+    } else {
+        for (const [key, monthData] of availableMonths) {
+            const [y, m] = key.split('-').map(Number);
+            const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const fin = calculateAllProjectFinancials(monthData, y, m);
+            const incomeClass = fin.totalEstimatedIncome >= 0 ? 'income-positive' : 'income-negative';
+            listHTML += `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid #e2e8f0;">
+              <div>
+                <strong>${months[m]} ${y}</strong><br>
+                <small>Projects: ${monthData.projects?.length || 0} | Employees: ${monthData.employees?.length || 0}</small><br>
+                <small class="${incomeClass}">Income: ${formatCurrency(fin.totalEstimatedIncome)}</small>
+              </div>
+              <button class="btn-sm primary seed-month-btn" data-key="${key}">Seed</button>
+            </div>`;
         }
-        popup.innerHTML = `
-              <div class="modal-header"><h3>Seed Data</h3><button class="modal-close">×</button></div>
-              <div class="modal-body">${listHTML}</div>
-            `;
-        document.body.appendChild(popup);
-        showOverlay();
-        popup.querySelector('.modal-close').addEventListener('click', () => { popup.remove(); hideOverlay(); });
-
-        popup.querySelectorAll('.seed-month-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const key = btn.dataset.key;
-                const sourceData = data[key];
-                if (!sourceData) return;
-                const [y, m] = key.split('-').map(Number);
-                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                if (confirm(`Copy all data from ${months[m]} ${y} to current month? Current data will be overwritten.`)) {
-                    const periodData = getPeriodDataSafe();
-                    const copiedEmployees = (sourceData.employees || []).map(e => ({ ...e, vacationDays: [], id: generateId() }));
-                    const copiedProjects = (sourceData.projects || []).map(p => ({ ...p, assignedEmployees: (p.assignedEmployees || []).map(a => ({ ...a })), id: generateId() }));
-                    periodData.employees = copiedEmployees;
-                    periodData.projects = copiedProjects;
-                    saveCurrentPeriodData(periodData);
-                    popup.remove();
-                    hideOverlay();
-                    renderAll();
-                }
-            });
-        });
     }
-function initializeSampleData() {
+    
+    popup.innerHTML = `
+        <div class="modal-header"><h3>Seed Data</h3><button class="modal-close">×</button></div>
+        <div class="modal-body">${listHTML}</div>
+    `;
+    document.body.appendChild(popup);
+    showOverlay();
+    
+    popup.querySelector('.modal-close').addEventListener('click', () => { popup.remove(); hideOverlay(); });
+
+    popup.querySelectorAll('.seed-month-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const key = btn.dataset.key;
+            const sourceData = data[key];
+            if (!sourceData) return;
+            
+            const [y, m] = key.split('-').map(Number);
+            const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            
+            if (confirm(`Copy all data from ${months[m]} ${y} to current month? Current data will be overwritten.`)) {
+                const periodData = getPeriodDataSafe();
+                
+                const idMap = new Map();
+                const copiedEmployees = (sourceData.employees || []).map(emp => {
+                    const newId = generateId();
+                    idMap.set(emp.id, newId);
+                    return { ...emp, vacationDays: [], id: newId };
+                });
+                
+                 const copiedProjects = (sourceData.projects || []).map(proj => {
+                    const newProjId = generateId();
+                    const updatedAssignments = (proj.assignedEmployees || []).map(a => ({
+                        ...a,
+                        employeeId: idMap.get(a.employeeId) || a.employeeId 
+                    }));
+                    return { ...proj, assignedEmployees: updatedAssignments, id: newProjId };
+                });
+                
+                periodData.employees = copiedEmployees;
+                periodData.projects = copiedProjects;
+                saveCurrentPeriodData(periodData);
+                
+                popup.remove();
+                hideOverlay();
+                renderAll();
+            }
+        });
+    });
+}
+
+    function initializeSampleData() {
         const data = getMonthlyData();
         const key = getPeriodKey(state.currentYear, state.currentMonth);
         if (!data[key] || (data[key].employees?.length === 0 && data[key].projects?.length === 0)) {
@@ -1764,8 +1807,11 @@ function initializeSampleData() {
             saveMonthlyData(data);
         }
     }
-function setupGlobalEvents() {
-        $('#sidebarToggle').addEventListener('click', () => {
+
+    function setupGlobalEvents() {
+    const sidebarToggle = $('#sidebarToggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', () => {
             state.sidebarCollapsed = !state.sidebarCollapsed;
             if (state.sidebarCollapsed) {
                 $('#sidebar').classList.add('collapsed');
@@ -1775,72 +1821,101 @@ function setupGlobalEvents() {
                 $('#sidebarOpenBtn').classList.add('hidden');
             }
         });
+    } else {
+        console.error('sidebarToggle not found');
+    }
 
-        $('#sidebarOpenBtn').addEventListener('click', () => {
+    const sidebarOpenBtn = $('#sidebarOpenBtn');
+    if (sidebarOpenBtn) {
+        sidebarOpenBtn.addEventListener('click', () => {
             state.sidebarCollapsed = false;
             $('#sidebar').classList.remove('collapsed');
             $('#sidebarOpenBtn').classList.add('hidden');
         });
+    }
 
-        $('#monthSelect').addEventListener('change', () => {
-            state.currentMonth = parseInt($('#monthSelect').value);
+    const monthSelect = $('#monthSelect');
+    if (monthSelect) {
+        monthSelect.addEventListener('change', () => {
+            state.currentMonth = parseInt(monthSelect.value);
             state.sortColumn = null;
             state.filters = {};
             renderAll();
         });
+    }
 
-        $('#yearSelect').addEventListener('change', () => {
-            state.currentYear = parseInt($('#yearSelect').value);
+    const yearSelect = $('#yearSelect');
+    if (yearSelect) {
+        yearSelect.addEventListener('change', () => {
+            state.currentYear = parseInt(yearSelect.value);
             state.sortColumn = null;
             state.filters = {};
             renderAll();
         });
+    }
 
-        $$('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                state.activeTab = tab.dataset.tab;
-                state.sortColumn = null;
-                state.filters = {};
-                renderAll();
-            });
+    $$('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            state.activeTab = tab.dataset.tab;
+            state.sortColumn = null;
+            state.filters = {};
+            renderAll();
         });
+    });
 
-        $('#addBtn').addEventListener('click', () => {
+    const addBtn = $('#addBtn');
+    if (addBtn) {
+        addBtn.addEventListener('click', () => {
             closeAllPopups();
             if (state.activeTab === 'projects') openAddProjectPanel();
             else openAddEmployeePanel();
         });
+    }
 
-        $('#closeSlidePanel').addEventListener('click', closeSlidePanel);
-        $('#overlay').addEventListener('click', () => {
+    const closeSlidePanelBtn = $('#closeSlidePanel');
+    if (closeSlidePanelBtn) {
+        closeSlidePanelBtn.addEventListener('click', closeSlidePanel);
+    }
+    
+    const overlay = $('#overlay');
+    if (overlay) {
+        overlay.addEventListener('click', () => {
             closeSlidePanel();
             closeAllPopups();
         });
+    }
 
-        $('#seedDataBtn').addEventListener('click', openSeedDataPopup);
+    const seedDataBtn = $('#seedDataBtn');
+    if (seedDataBtn) {
+        seedDataBtn.addEventListener('click', openSeedDataPopup);
+    }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeSlidePanel();
-                closeAllPopups();
-            }
-        });
-
-        window.addEventListener('resize', () => {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeSlidePanel();
             closeAllPopups();
-        });
-    }
-function init() {
-        initializeSampleData();
-        setupGlobalEvents();
-        updatePeriodInfo();
-        renderAll();
-    }
+        }
+    });
 
-    init();
+    window.addEventListener('resize', () => {
+        closeAllPopups();
+    });
+}
 
+   function init() {
+    initializeSampleData();
+    setupGlobalEvents();
+    updatePeriodInfo();
+    renderAll();
     console.log('✅ Employee & Project Dashboard initialized');
     console.log('📊 Data stored in localStorage key:', STORAGE_KEY);
     console.log('📅 Current period:', getPeriodKey(state.currentYear, state.currentMonth));
     console.log('👥 Active tab:', state.activeTab);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
 })();
