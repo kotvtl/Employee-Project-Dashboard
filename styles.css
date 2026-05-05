@@ -667,3 +667,32 @@ tr:hover td {
 ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
+@media (max-width: 768px) {
+    .sidebar {
+        width: 240px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 300;
+    }
+    .sidebar.collapsed {
+        transform: translateX(-100%);
+        width: 240px;
+    }
+    .sidebar.collapsed ~ .sidebar-open-btn {
+        display: flex;
+    }
+    .sidebar-open-btn {
+        display: none;
+    }
+    .slide-panel {
+        width: 100%;
+        max-width: 100%;
+    }
+    .modal {
+        min-width: auto;
+        width: 95vw;
+        max-width: 95vw;
+    }
+}
